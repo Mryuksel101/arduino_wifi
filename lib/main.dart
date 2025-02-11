@@ -1,4 +1,4 @@
-import 'package:arduino_wifi/bottom_nav/bottom_nav_view.dart';
+import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
