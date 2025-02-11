@@ -35,23 +35,27 @@ class _BottomNavViewState extends State<BottomNavView> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        backgroundColor: Colors.white,
-        activeColor: const Color(0xff0079FF),
-        onTap: (value) {
-          viewModel.changeCurrentTab(value);
-        },
-        iconSize: 26,
-        icons: const [
-          Icons.window_rounded,
-          Icons.info,
-        ],
-        activeIndex: viewModel.currentIndex,
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
-      ),
+      bottomNavigationBar: ListenableBuilder(
+          listenable: viewModel,
+          builder: (context, widget) {
+            return AnimatedBottomNavigationBar(
+              backgroundColor: Colors.white,
+              activeColor: const Color(0xff0079FF),
+              onTap: (value) {
+                viewModel.changeCurrentTab(value);
+              },
+              iconSize: 26,
+              icons: const [
+                Icons.window_rounded,
+                Icons.info,
+              ],
+              activeIndex: viewModel.currentIndex,
+              gapLocation: GapLocation.center,
+              notchSmoothness: NotchSmoothness.verySmoothEdge,
+              leftCornerRadius: 32,
+              rightCornerRadius: 32,
+            );
+          }),
       body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: viewModel.pageController,

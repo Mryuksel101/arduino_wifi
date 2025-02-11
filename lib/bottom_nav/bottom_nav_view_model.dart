@@ -12,6 +12,7 @@ class BottomNavViewModel extends ChangeNotifier {
 
   void changeCurrentTab(int index) {
     currentIndex = index;
+    _pageController.jumpToPage(index);
     notifyListeners();
   }
 
