@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   just_audio_background: ^0.0.1-beta.15
+  animated_bottom_navigation_bar: ^1.4.0
 
 
 dev_dependencies:
