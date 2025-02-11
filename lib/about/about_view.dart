@@ -5,6 +5,10 @@ class AboutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("About View"));
+    return const Scaffold(
+      body: Center(
+        child: Text('About View'),
+      ),
+    );
   }
 }

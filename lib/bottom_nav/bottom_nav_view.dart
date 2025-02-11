@@ -2,6 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:arduino_wifi/about/about_view.dart';
 import 'package:arduino_wifi/bottom_nav/bottom_nav_view_model.dart';
 import 'package:arduino_wifi/home/home_view.dart';
+import 'package:arduino_wifi/settings/settings_view.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavView extends StatefulWidget {
@@ -25,13 +26,14 @@ class _BottomNavViewState extends State<BottomNavView> {
     return Scaffold(
       extendBody: true,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xff0079FF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
         onPressed: () {
-          viewModel.changeCurrentTab(4);
+          viewModel.changeCurrentTab(2);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -62,6 +64,7 @@ class _BottomNavViewState extends State<BottomNavView> {
           children: [
             const HomeView(),
             const AboutView(),
+            const SettingsView()
           ]),
     );
   }
