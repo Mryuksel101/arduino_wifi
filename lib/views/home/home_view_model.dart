@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/arduino_service.dart'; // Arduino servisini import ediyoruz - yol projenize göre değişebilir
 
 class HomeViewModel extends ChangeNotifier {
-  final String _title = "Home View";
-  String get title => _title;
+  bool isLoading = true;
 
   // Arduino servisi örneği
   final ArduinoService _arduinoService = ArduinoService();
@@ -16,9 +15,13 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners(); // UI'ı güncellemek istiyorsanız
   }
 
-  void init() {
+  Future<void> init() async {
+    isLoading = true;
     textController.addListener(() {
       sendDataToArduino(textController.text);
     });
+    await _arduinoService.initializeSocket();
+    isLoading = false;
+    notifyListeners();
   }
 }
