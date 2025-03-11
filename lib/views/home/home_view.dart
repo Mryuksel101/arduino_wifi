@@ -46,6 +46,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             SizedBox(height: 10),
             SdButton(
+              backgroundColor: Colors.blue,
               onPressed: () {
                 // Burada Arduino'ya veri göndermek için metod çağrılıyor
                 // Örnek: sendDataToArduino('AÇ');
