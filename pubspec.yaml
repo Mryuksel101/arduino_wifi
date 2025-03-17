@@ -37,6 +37,7 @@ dependencies:
   just_audio_background: ^0.0.1-beta.15
   animated_bottom_navigation_bar: ^1.4.0
   google_fonts: 6.2.1
+  flutter_blue_plus: ^1.35.3
 
 
 dev_dependencies:
