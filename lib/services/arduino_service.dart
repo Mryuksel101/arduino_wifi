@@ -20,7 +20,11 @@ class ArduinoService {
       await initializeSocket();
     }
     final address = InternetAddress('192.168.101.71'); // ESP8266'nın IP adresi
-    udpSocket!.send(data.codeUnits, address, 1234);
-    log("Veri gönderildi: $data");
+    final bytesSent = udpSocket!.send(data.codeUnits, address, 1234);
+    if (bytesSent == -1) {
+      log("Gönderim başarısız!");
+    } else {
+      log("$bytesSent byte gönderildi: $data");
+    }
   }
 }

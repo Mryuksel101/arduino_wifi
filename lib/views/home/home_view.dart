@@ -48,9 +48,7 @@ class _HomeViewState extends State<HomeView> {
                       children: [
                         SdTextField(
                           label: 'Gönderilecek Veri',
-                          onChanged: (value) {
-                            _vm.sendDataToArduino(value);
-                          },
+                          onChanged: (value) {},
                           textInputType: TextInputType.text,
                           textEditingController: _vm.textController,
                         ),

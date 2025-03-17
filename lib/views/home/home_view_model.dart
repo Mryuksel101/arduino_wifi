@@ -11,15 +11,16 @@ class HomeViewModel extends ChangeNotifier {
 
   // Arduino'ya veri göndermek için metod
   void sendDataToArduino(String data) {
-    _arduinoService.sendToArduino(data);
+    _arduinoService.sendToArduino(textController.text);
     notifyListeners(); // UI'ı güncellemek istiyorsanız
   }
 
   Future<void> init() async {
     isLoading = true;
-    textController.addListener(() {
-      sendDataToArduino(textController.text);
-    });
+    // textController.addListener(() {
+    //   sendDataToArduino(textController.text);
+    //   log(textController.text);
+    // });
     await _arduinoService.initializeSocket();
     isLoading = false;
     notifyListeners();
