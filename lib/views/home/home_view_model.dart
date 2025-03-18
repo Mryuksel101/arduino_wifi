@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:arduino_wifi/services/ble_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:lottie/lottie.dart';
@@ -47,6 +48,19 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  Future<LottieComposition?> customDecoder(List<int> bytes) {
+    return LottieComposition.decodeZip(bytes, filePicker: (files) {
+      return files.firstWhere((f) => f.name == 'animations/cat.json');
+    });
+  }
+
+  Future<LottieComposition?> customDecoder2(List<int> bytes) {
+    return LottieComposition.decodeZip(bytes, filePicker: (files) {
+      return files.firstWhere(
+          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
+    });
+  }
+
   void _showBluetoothAlert(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -67,7 +81,10 @@ class HomeViewModel extends ChangeNotifier {
             ),
             title: Text(
               "Bluetooth Kapalı",
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                  color: CupertinoColors.systemRed,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 19),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -75,7 +92,8 @@ class HomeViewModel extends ChangeNotifier {
                 SizedBox(
                   height: 150,
                   child: Lottie.asset(
-                    'assets/animations/bluetooth.lottie',
+                    fit: BoxFit.cover,
+                    'assets/animations/bluetooth.json',
                   ),
                 ),
                 SizedBox(height: 16),
