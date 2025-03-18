@@ -16,7 +16,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _vm = HomeViewModel();
+    _vm = HomeViewModel(context);
     _vm.init();
   }
 
@@ -59,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
                           backgroundColor: Colors.blue,
                           text: 'Send',
                           onPressed: () {
-                            _vm.sendDataToArduino(_vm.textController.text);
+                            //_vm.sendDataToArduino(_vm.textController.text);
                           },
                         ),
                       ],
