@@ -1,28 +1,55 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-import '../../services/arduino_service.dart'; // Arduino servisini import ediyoruz - yol projenize göre değişebilir
+import 'package:arduino_wifi/services/ble_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class HomeViewModel extends ChangeNotifier {
   bool isLoading = true;
-
-  // Arduino servisi örneği
-  final ArduinoService _arduinoService = ArduinoService();
+  bool isBluetoothOn = false;
+  String bluetoothStatus = "Kontrol ediliyor...";
+  StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
+  final BLEService _bleService = BLEService();
   final TextEditingController textController = TextEditingController();
 
-  // Arduino'ya veri göndermek için metod
-  void sendDataToArduino(String data) {
-    _arduinoService.sendToArduino(textController.text);
-    notifyListeners(); // UI'ı güncellemek istiyorsanız
+  void _startMonitoringBluetoothState() {
+    _bluetoothStateSubscription?.cancel(); // Varsa önceki aboneliği iptal et
+
+    _bluetoothStateSubscription = _bleService.adapterState.listen((state) {
+      isBluetoothOn = state == BluetoothAdapterState.on;
+
+      // Duruma göre mesaj güncelle
+      if (isBluetoothOn) {
+        bluetoothStatus = "Bluetooth açık";
+        // Bluetooth hazır olduğunda taramayı başlatabilirsiniz
+        startBleScan();
+      } else {
+        bluetoothStatus = "Bluetooth kapalı";
+        // Taramayı durdur
+        _bleService.stopScanning();
+      }
+
+      notifyListeners();
+    });
+  }
+
+  void startBleScan() {
+    if (isBluetoothOn) {
+      _bleService.startScanning();
+    }
   }
 
   Future<void> init() async {
     isLoading = true;
-    // textController.addListener(() {
-    //   sendDataToArduino(textController.text);
-    //   log(textController.text);
-    // });
-    await _arduinoService.initializeSocket();
+    _startMonitoringBluetoothState();
     isLoading = false;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _bluetoothStateSubscription?.cancel();
+    textController.dispose();
+    super.dispose();
   }
 }
