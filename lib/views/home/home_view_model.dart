@@ -12,9 +12,8 @@ enum HomeViewState { loading, scanning, scannedDevices, connected }
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel(this.context);
-  bool isLoading = true;
+  HomeViewState state = HomeViewState.loading;
   bool isBluetoothOn = false;
-  bool isScanning = false;
   String bluetoothStatus = "Kontrol ediliyor...";
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
   StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
@@ -53,10 +52,10 @@ class HomeViewModel extends ChangeNotifier {
 
   void startBleScan() {
     if (isBluetoothOn) {
-      isScanning = true;
+      state = HomeViewState.scanning;
       notifyListeners();
       _bleService.startScanning();
-      isScanning = false;
+      state = HomeViewState.scannedDevices;
       notifyListeners();
       _listenToScanResults();
     }
@@ -78,6 +77,7 @@ class HomeViewModel extends ChangeNotifier {
     try {
       await device.connect();
       connectedDevice = device;
+      state = HomeViewState.connected;
       notifyListeners();
 
       // Show connection success message
@@ -88,6 +88,15 @@ class HomeViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bağlantı hatası: $e')),
       );
+    }
+  }
+
+  Future<void> disconnectFromDevice() async {
+    if (connectedDevice != null) {
+      await connectedDevice!.disconnect();
+      connectedDevice = null;
+      state = HomeViewState.scannedDevices;
+      notifyListeners();
     }
   }
 
@@ -185,10 +194,9 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    isLoading = true;
-    _startMonitoringBluetoothState();
-    isLoading = false;
+    state = HomeViewState.loading;
     notifyListeners();
+    _startMonitoringBluetoothState();
   }
 
   @override

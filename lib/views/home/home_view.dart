@@ -45,8 +45,6 @@ class _HomeViewState extends State<HomeView> {
         return _buildScannedDevicesState();
       case HomeViewState.connected:
         return _buildConnectedState();
-      default:
-        return SizedBox();
     }
   }
 
@@ -235,7 +233,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: _vm.disconnect,
+                    onPressed: _vm.disconnectFromDevice,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red.shade100,
                     ),
@@ -271,9 +269,7 @@ class _HomeViewState extends State<HomeView> {
                 SdButton(
                   backgroundColor: Colors.blue,
                   text: 'Gönder',
-                  onPressed: () {
-                    _vm.sendDataToArduino(_vm.textController.text);
-                  },
+                  onPressed: () {},
                 ),
               ],
             ),
