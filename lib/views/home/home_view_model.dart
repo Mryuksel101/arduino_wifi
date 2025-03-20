@@ -8,10 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:lottie/lottie.dart';
 
+enum HomeViewState { loading, scanning, scannedDevices, connected }
+
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel(this.context);
   bool isLoading = true;
   bool isBluetoothOn = false;
+  bool isScanning = false;
   String bluetoothStatus = "Kontrol ediliyor...";
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
   StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
@@ -20,6 +23,7 @@ class HomeViewModel extends ChangeNotifier {
   final PermissionService _permissionService = PermissionService();
   final TextEditingController textController = TextEditingController();
   final BuildContext context;
+  BluetoothDevice? connectedDevice;
 
   void _startMonitoringBluetoothState() {
     _bluetoothStateSubscription?.cancel(); // Varsa önceki aboneliği iptal et
@@ -49,9 +53,17 @@ class HomeViewModel extends ChangeNotifier {
 
   void startBleScan() {
     if (isBluetoothOn) {
+      isScanning = true;
+      notifyListeners();
       _bleService.startScanning();
+      isScanning = false;
+      notifyListeners();
       _listenToScanResults();
     }
+  }
+
+  void stopBleScan() {
+    _bleService.stopScanning();
   }
 
   void _listenToScanResults() {
@@ -60,6 +72,23 @@ class HomeViewModel extends ChangeNotifier {
       scanResults = results;
       notifyListeners();
     });
+  }
+
+  Future<void> connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      connectedDevice = device;
+      notifyListeners();
+
+      // Show connection success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bağlantı başarılı: ${device.platformName}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bağlantı hatası: $e')),
+      );
+    }
   }
 
   Future<LottieComposition?> customDecoder(List<int> bytes) {
