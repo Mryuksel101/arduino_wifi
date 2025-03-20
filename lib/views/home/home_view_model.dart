@@ -14,6 +14,8 @@ class HomeViewModel extends ChangeNotifier {
   bool isBluetoothOn = false;
   String bluetoothStatus = "Kontrol ediliyor...";
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
+  StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
+  List<ScanResult> scanResults = [];
   final BLEService _bleService = BLEService();
   final PermissionService _permissionService = PermissionService();
   final TextEditingController textController = TextEditingController();
@@ -48,7 +50,16 @@ class HomeViewModel extends ChangeNotifier {
   void startBleScan() {
     if (isBluetoothOn) {
       _bleService.startScanning();
+      _listenToScanResults();
     }
+  }
+
+  void _listenToScanResults() {
+    _scanResultsSubscription?.cancel();
+    _scanResultsSubscription = _bleService.scanResults.listen((results) {
+      scanResults = results;
+      notifyListeners();
+    });
   }
 
   Future<LottieComposition?> customDecoder(List<int> bytes) {
@@ -154,6 +165,7 @@ class HomeViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _bluetoothStateSubscription?.cancel();
+    _scanResultsSubscription?.cancel();
     textController.dispose();
     super.dispose();
   }
