@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
+import 'package:arduino_wifi/services/permission_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -16,6 +15,7 @@ class HomeViewModel extends ChangeNotifier {
   String bluetoothStatus = "Kontrol ediliyor...";
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
   final BLEService _bleService = BLEService();
+  final PermissionService _permissionService = PermissionService();
   final TextEditingController textController = TextEditingController();
   final BuildContext context;
 
@@ -66,17 +66,7 @@ class HomeViewModel extends ChangeNotifier {
 
   // Bluetooth ayarlarını açma metodu
   Future<void> _openBluetoothSettings() async {
-    try {
-      if (Platform.isAndroid) {
-        await AppSettings.openAppSettings(type: AppSettingsType.bluetooth);
-      } else if (Platform.isIOS) {
-        // iOS'ta doğrudan Bluetooth ayarlarını açamayız,
-        // FlutterBluePlus'ın sistemle etkileşime girmesini sağlayabiliriz
-        await FlutterBluePlus.turnOn(); // iOS'ta izin isteyebilir
-      }
-    } catch (e) {
-      debugPrint('Bluetooth ayarları açılırken hata: $e');
-    }
+    await _permissionService.openBluetoothSettings();
   }
 
   void _showBluetoothAlert(BuildContext context) {
