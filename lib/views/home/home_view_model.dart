@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,66 +70,72 @@ class HomeViewModel extends ChangeNotifier {
       transitionDuration: Duration(milliseconds: 400),
       pageBuilder: (_, __, ___) => Container(), // Kullanılmıyor
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: CurvedAnimation(
-            parent: animation,
-            curve: Curves.elasticOut,
-            reverseCurve: Curves.easeOutCubic,
-          ),
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Text(
-              "Bluetooth Kapalı",
-              style: TextStyle(
-                  color: CupertinoColors.systemRed,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 19),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 150,
-                  child: Lottie.asset(
-                    fit: BoxFit.cover,
+        // Yukarıdan aşağıya kayma animasyonu
+        final slideAnimation = Tween<Offset>(
+          begin: Offset(0, -0.3),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        ));
+
+        // Soluklaşma animasyonu
+        final fadeAnimation = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOut,
+        ));
+
+        return SlideTransition(
+          position: slideAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: AlertDialog(
+              backgroundColor: CupertinoColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                "Bluetooth Kapalı",
+                style: TextStyle(color: Colors.blue, fontSize: 19),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset(
                     'assets/animations/bluetooth.json',
+                    fit: BoxFit.contain,
+                    repeat: true,
+                    animate: true,
+                    width: 180,
+                    height: 180,
                   ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "Cihazları taramak için lütfen Bluetooth'u açın.",
-                  textAlign: TextAlign.center,
+                  SizedBox(height: 16),
+                  Text(
+                    "Cihazları taramak için lütfen Bluetooth'u açın.",
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              actions: [
+                SdButton(
+                  width: double.infinity,
+                  backgroundColor: Colors.blue,
+                  onPressed: () {
+                    // Bluetooth ayarlarını açma girişimi
+                    // FlutterBluePlus.turnOn(); // Bu şu anda Flutter Blue Plus'ta doğrudan desteklenmiyor
+                    Navigator.pop(context);
+                  },
+                  text: "Bluetooth'u Aç",
                 ),
               ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  dismissBluetoothAlert();
-                },
-                child: Text("Tamam"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Bluetooth ayarlarını açma girişimi
-                  // FlutterBluePlus.turnOn(); // Bu şu anda Flutter Blue Plus'ta doğrudan desteklenmiyor
-                  Navigator.pop(context);
-                  dismissBluetoothAlert();
-                },
-                child: Text("Bluetooth'u Aç"),
-              ),
-            ],
           ),
         );
       },
     );
-  }
-
-  void dismissBluetoothAlert() {
-    notifyListeners();
   }
 
   Future<void> init() async {
