@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,6 +62,21 @@ class HomeViewModel extends ChangeNotifier {
       return files.firstWhere(
           (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
     });
+  }
+
+  // Bluetooth ayarlarını açma metodu
+  Future<void> _openBluetoothSettings() async {
+    try {
+      if (Platform.isAndroid) {
+        await AppSettings.openAppSettings(type: AppSettingsType.bluetooth);
+      } else if (Platform.isIOS) {
+        // iOS'ta doğrudan Bluetooth ayarlarını açamayız,
+        // FlutterBluePlus'ın sistemle etkileşime girmesini sağlayabiliriz
+        await FlutterBluePlus.turnOn(); // iOS'ta izin isteyebilir
+      }
+    } catch (e) {
+      debugPrint('Bluetooth ayarları açılırken hata: $e');
+    }
   }
 
   void _showBluetoothAlert(BuildContext context) {
@@ -123,10 +140,9 @@ class HomeViewModel extends ChangeNotifier {
                 SdButton(
                   width: double.infinity,
                   backgroundColor: Colors.blue,
-                  onPressed: () {
-                    // Bluetooth ayarlarını açma girişimi
-                    // FlutterBluePlus.turnOn(); // Bu şu anda Flutter Blue Plus'ta doğrudan desteklenmiyor
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await _openBluetoothSettings();
                   },
                   text: "Bluetooth'u Aç",
                 ),
