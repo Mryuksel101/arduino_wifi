@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:lottie/lottie.dart';
 
-enum HomeViewState { loading, scanning, scannedDevices, connected }
+enum HomeViewState { idle, loading, scanning, scannedDevices, connected }
 
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel(this.context);
@@ -36,6 +36,8 @@ class HomeViewModel extends ChangeNotifier {
         // Bluetooth hazır olduğunda taramayı başlatabilirsiniz
         startBleScan();
       } else {
+        this.state = HomeViewState.idle;
+        notifyListeners();
         bluetoothStatus = "Bluetooth kapalı";
         // Use post-frame callback to avoid showing dialog during build
         WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -37,6 +37,8 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildBodyForState() {
     switch (_vm.state) {
+      case HomeViewState.idle:
+        return SizedBox();
       case HomeViewState.loading:
         return _buildLoadingState();
       case HomeViewState.scanning:
