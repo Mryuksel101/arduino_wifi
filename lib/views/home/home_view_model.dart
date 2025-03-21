@@ -121,7 +121,7 @@ class HomeViewModel extends ChangeNotifier {
   void _showBluetoothAlert(BuildContext context) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       barrierLabel: "Bluetooth Alert",
       transitionDuration: Duration(milliseconds: 400),
       pageBuilder: (_, __, ___) => Container(), // Kullanılmıyor
