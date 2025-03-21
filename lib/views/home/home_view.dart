@@ -29,7 +29,10 @@ class _HomeViewState extends State<HomeView> {
           appBar: AppBar(
             title: const Text('Arduino Wifi'),
           ),
-          body: _buildBodyForState(),
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: _buildBodyForState(),
+          ),
         );
       },
     );
