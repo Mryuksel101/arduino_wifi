@@ -183,20 +183,21 @@ class _HomeViewState extends State<HomeView> {
 
                       // Signal strength indicator
                       int signalBars = 0;
-                      if (rssi > -60)
+                      if (rssi > -60) {
                         signalBars = 4;
-                      else if (rssi > -70)
+                      } else if (rssi > -70) {
                         signalBars = 3;
-                      else if (rssi > -80)
+                      } else if (rssi > -80) {
                         signalBars = 2;
-                      else if (rssi > -90) signalBars = 1;
+                      } else if (rssi > -90) {
+                        signalBars = 1;
+                      }
 
-                      return Card(
+                      return Material(
+                        borderRadius: BorderRadius.circular(16),
                         elevation: 3,
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shadowColor: Colors.grey.withValues(alpha: 0.2),
+                        type: MaterialType.card,
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Column(
