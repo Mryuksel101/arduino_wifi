@@ -14,6 +14,7 @@ class HomeViewModel extends ChangeNotifier {
   HomeViewModel(this.context);
   HomeViewState state = HomeViewState.loading;
   String bluetoothStatus = "Kontrol ediliyor...";
+  bool isBtOffAlertShown = false;
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
   StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
   List<ScanResult> scanResults = [];
@@ -30,9 +31,14 @@ class HomeViewModel extends ChangeNotifier {
       // Duruma göre mesaj güncelle
       if (state == BluetoothAdapterState.on) {
         bluetoothStatus = "Bluetooth açık";
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pop();
-        });
+        if (isBtOffAlertShown) {
+          // Bluetooth alert'ini kapat
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pop();
+          });
+          isBtOffAlertShown = false;
+        }
+
         // Bluetooth hazır olduğunda taramayı başlatabilirsiniz
         startBleScan();
       } else if (state == BluetoothAdapterState.off) {
@@ -118,6 +124,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void _showBluetoothAlert(BuildContext context) {
+    isBtOffAlertShown = true;
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
