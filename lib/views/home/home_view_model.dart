@@ -13,7 +13,6 @@ enum HomeViewState { idle, loading, scanning, scannedDevices, connected }
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel(this.context);
   HomeViewState state = HomeViewState.loading;
-  bool isBluetoothOn = false;
   String bluetoothStatus = "Kontrol ediliyor...";
   StreamSubscription<BluetoothAdapterState>? _bluetoothStateSubscription;
   StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
@@ -28,14 +27,17 @@ class HomeViewModel extends ChangeNotifier {
     _bluetoothStateSubscription?.cancel(); // Varsa önceki aboneliği iptal et
 
     _bluetoothStateSubscription = _bleService.adapterState.listen((state) {
-      isBluetoothOn = state == BluetoothAdapterState.on;
-
       // Duruma göre mesaj güncelle
-      if (isBluetoothOn) {
+      if (state == BluetoothAdapterState.on) {
         bluetoothStatus = "Bluetooth açık";
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pop();
+        });
         // Bluetooth hazır olduğunda taramayı başlatabilirsiniz
         startBleScan();
-      } else {
+      } else if (state == BluetoothAdapterState.off) {
+        // Taramayı durdur
+        _bleService.stopScanning();
         this.state = HomeViewState.idle;
         notifyListeners();
         bluetoothStatus = "Bluetooth kapalı";
@@ -43,9 +45,6 @@ class HomeViewModel extends ChangeNotifier {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showBluetoothAlert(context);
         });
-
-        // Taramayı durdur
-        _bleService.stopScanning();
       }
 
       notifyListeners();
@@ -53,14 +52,12 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void startBleScan() {
-    if (isBluetoothOn) {
-      state = HomeViewState.scanning;
-      notifyListeners();
-      _bleService.startScanning();
-      state = HomeViewState.scannedDevices;
-      notifyListeners();
-      _listenToScanResults();
-    }
+    state = HomeViewState.scanning;
+    notifyListeners();
+    _bleService.startScanning();
+    state = HomeViewState.scannedDevices;
+    notifyListeners();
+    _listenToScanResults();
   }
 
   void stopBleScan() {
@@ -182,7 +179,6 @@ class HomeViewModel extends ChangeNotifier {
                   width: double.infinity,
                   backgroundColor: Colors.blue,
                   onPressed: () async {
-                    Navigator.of(context).pop();
                     await _openBluetoothSettings();
                   },
                   text: "Bluetooth'u Aç",
