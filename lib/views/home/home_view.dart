@@ -150,7 +150,7 @@ class _HomeViewState extends State<HomeView> {
               Text('Tarama durdu'),
               Spacer(),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: _vm.startBleScan,
                 icon: Icon(
                   Icons.refresh,
                   size: 18,
