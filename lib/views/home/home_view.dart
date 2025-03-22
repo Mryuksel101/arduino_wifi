@@ -135,9 +135,8 @@ class _HomeViewState extends State<HomeView> {
           ),
           SizedBox(height: 8),
 
-          // Scan status indicator - inactive
+          // Scan status indicator - inactive with rescan button
           Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 12,
@@ -149,6 +148,30 @@ class _HomeViewState extends State<HomeView> {
               ),
               SizedBox(width: 8),
               Text('Tarama durdu'),
+              Spacer(),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.refresh,
+                  size: 18,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Tekrar Tara',
+                  style: TextStyle(
+                    letterSpacing: 0.015, // tracking-[0.015em],
+                    fontWeight: FontWeight.bold, // font-bold
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
