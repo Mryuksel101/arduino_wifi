@@ -57,10 +57,10 @@ class HomeViewModel extends ChangeNotifier {
     });
   }
 
-  void startBleScan() {
+  void startBleScan() async {
     state = HomeViewState.scanning;
     notifyListeners();
-    _bleService.startScanning();
+    await _bleService.startScanning();
     state = HomeViewState.scannedDevices;
     notifyListeners();
     _listenToScanResults();
@@ -86,13 +86,19 @@ class HomeViewModel extends ChangeNotifier {
       notifyListeners();
 
       // Show connection success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bağlantı başarılı: ${device.platformName}')),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.green,
+              content: Text('Cihaza bağlandı: ${device.name}')),
+        );
+      });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bağlantı hatası: $e')),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Bağlantı başarısız: $e')),
+        );
+      });
     }
   }
 

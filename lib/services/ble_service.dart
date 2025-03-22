@@ -18,8 +18,9 @@ class BLEService {
   Stream<BluetoothAdapterState> get adapterState =>
       FlutterBluePlus.adapterState;
   // Start BLE scanning
-  void startScanning({Duration timeout = const Duration(seconds: 4)}) {
-    FlutterBluePlus.startScan(timeout: timeout);
+  Future<void> startScanning(
+      {Duration timeout = const Duration(seconds: 4)}) async {
+    await FlutterBluePlus.startScan(timeout: timeout);
   }
 
   // Stop scanning

@@ -41,7 +41,9 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildBodyForState() {
     switch (_vm.state) {
       case HomeViewState.idle:
-        return SizedBox();
+        return SizedBox(
+          key: ValueKey(_vm.state),
+        );
       case HomeViewState.loading:
         return _buildLoadingState();
       case HomeViewState.scanning:
@@ -55,6 +57,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildLoadingState() {
     return Center(
+      key: ValueKey(_vm.state),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -74,6 +77,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildScanningState() {
     return Padding(
+      key: ValueKey(_vm.state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,6 +126,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildScannedDevicesState() {
     return Padding(
+      key: ValueKey(_vm.state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,6 +325,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildConnectedState() {
     return Padding(
+      key: ValueKey(_vm.state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
