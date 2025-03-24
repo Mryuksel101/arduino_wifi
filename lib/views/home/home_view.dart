@@ -31,6 +31,7 @@ class _HomeViewState extends State<HomeView> {
               floatingActionButton: Padding(
                 padding: EdgeInsets.only(bottom: 30),
                 child: FloatingActionButton.extended(
+                  heroTag: "btn1",
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(60)),
                   backgroundColor: Colors.blue,
