@@ -66,10 +66,11 @@ Widget buildConnectedState(
         // Data sending section
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Veri Gönder',
+                vm.currentRecordStep.description,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ Widget buildConnectedState(
               ),
               SizedBox(height: 12),
               SdTextField(
-                label: 'Gönderilecek Veri',
+                label: vm.currentRecordStep.title,
                 onChanged: (value) {
                   vm.sendToArduino(value);
                 },
@@ -85,13 +86,15 @@ Widget buildConnectedState(
                 textEditingController: vm.textController,
               ),
               SizedBox(height: 10),
+              Spacer(),
               SdButton(
                 backgroundColor: Colors.blue,
-                text: 'Gönder',
+                text: 'Kaydet',
                 onPressed: () {
                   vm.sendToArduino("Hello, Arduino!");
                 },
               ),
+              Spacer(),
             ],
           ),
         ),

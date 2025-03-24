@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
+import 'package:arduino_wifi/views/add_arrow_record/models/arrow_record_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -134,6 +135,15 @@ class AddArrowRecordViewModel extends ChangeNotifier {
       },
     );
   }
+
+  void prepeareArrowRecord() {
+    currentRecordStepIndex = 0;
+    notifyListeners();
+  }
+
+  int currentRecordStepIndex = 0;
+  ArrowRecordStep get currentRecordStep =>
+      arrowRecordSteps[currentRecordStepIndex];
 
   @override
   void dispose() {
