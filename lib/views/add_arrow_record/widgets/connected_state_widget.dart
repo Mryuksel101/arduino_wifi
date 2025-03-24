@@ -15,52 +15,58 @@ Widget buildConnectedState(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Connected device info
-        Card(
+        Material(
+          borderRadius: BorderRadius.circular(16),
           elevation: 3,
+          shadowColor: Colors.grey.withValues(alpha: 0.2),
+          type: MaterialType.card,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
+            padding: const EdgeInsets.all(12),
+            child: Column(
               children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(6),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Icon(
+                      Icons.bluetooth,
+                      color: Colors.blue.shade800,
+                      size: 30,
+                    ),
                   ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Column(
+                  title: Text(
+                    "Bağlı Cihaz",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Bağlı Cihaz',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         vm.connectedDevice?.platformName ?? 'Cihaz',
                         style: TextStyle(fontSize: 14),
                       ),
+                      const SizedBox(height: 4),
                     ],
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: vm.disconnectFromDevice,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade100,
+                  trailing: SdButton(
+                    onPressed: vm.disconnectFromDevice,
+                    backgroundColor: Colors.grey,
+                    text: "Bağlantıyı Kes",
                   ),
-                  child: Text('Bağlantıyı Kes'),
                 ),
               ],
             ),
           ),
         ),
-
         SizedBox(height: 20),
 
         // Data sending section
@@ -68,11 +74,12 @@ Widget buildConnectedState(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Spacer(),
               Text(
                 vm.currentRecordStep.description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 19,
                   fontWeight: FontWeight.bold,
                 ),
               ),
