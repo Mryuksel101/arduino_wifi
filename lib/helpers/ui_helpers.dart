@@ -7,11 +7,7 @@ class UiHelpers {
   static final GlobalKey<NavigatorState> navigator =
       GlobalKey<NavigatorState>(debugLabel: 'AppNavigator');
 
-  static void showBtOffAlert(
-      final BuildContext context, final Function openBluetoothSettings) {
-    // Store the original context to use for the Bluetooth settings
-    final BuildContext outerContext = context;
-
+  static void showBtOffAlert(final Function openBluetoothSettings) {
     showGeneralDialog(
       context: navigator.currentContext!,
       barrierDismissible: false,
@@ -73,16 +69,7 @@ class UiHelpers {
                   width: double.infinity,
                   backgroundColor: Colors.blue,
                   onPressed: () {
-                    // Dismiss the dialog using the dialog context
-                    Navigator.of(dialogContext).pop();
-
-                    // Use the original context for Bluetooth settings
-                    // Wrap in Future.delayed to ensure dialog is fully dismissed first
-                    Future.delayed(Duration.zero, () {
-                      if (outerContext.mounted) {
-                        openBluetoothSettings();
-                      }
-                    });
+                    openBluetoothSettings();
                   },
                   text: "Bluetooth'u Aç",
                 ),
@@ -92,5 +79,9 @@ class UiHelpers {
         );
       },
     );
+  }
+
+  static void hideAlert() {
+    Navigator.of(navigator.currentContext!).pop();
   }
 }

@@ -41,7 +41,7 @@ class BluetoothProvider extends ChangeNotifier {
         if (isBtOffAlertShown) {
           // Bluetooth alert'ini kapat
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pop();
+            UiHelpers.hideAlert();
           });
           isBtOffAlertShown = false;
         }
@@ -66,7 +66,7 @@ class BluetoothProvider extends ChangeNotifier {
 
   void _showBluetoothAlert(BuildContext context) {
     isBtOffAlertShown = true;
-    UiHelpers.showBtOffAlert(context, _openBluetoothSettings);
+    UiHelpers.showBtOffAlert(_openBluetoothSettings);
   }
 
   // Bluetooth ayarlarını açma metodu
