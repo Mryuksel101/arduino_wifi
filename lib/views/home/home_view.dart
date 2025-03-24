@@ -34,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(60)),
                   backgroundColor: Colors.blue,
-                  onPressed: () {},
+                  onPressed: _vm.openAddArrowRecordView,
                   label: Row(
                     children: [
                       Icon(
