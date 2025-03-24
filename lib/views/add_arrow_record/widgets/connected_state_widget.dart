@@ -1,6 +1,7 @@
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/common/widgets/text_field.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
+import 'package:arduino_wifi/views/add_arrow_record/models/arrow_record_step.dart';
 import 'package:arduino_wifi/views/add_arrow_record/view_model/add_arrow_record_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +88,8 @@ Widget buildConnectedState(
               SdTextField(
                 label: vm.currentRecordStep.title,
                 onChanged: (value) {
-                  vm.sendToArduino(value);
+                  vm.updateSaveModel(
+                      type: vm.currentRecordStep.type, value: value);
                 },
                 textInputType: TextInputType.text,
                 textEditingController: vm.textController,
@@ -96,9 +98,15 @@ Widget buildConnectedState(
               Spacer(),
               SdButton(
                 backgroundColor: Colors.blue,
-                text: 'Kaydet',
+                text: vm.currentRecordStepIndex < arrowRecordSteps.length - 1
+                    ? 'Kaydet ve İlerle'
+                    : "Kaydı Tamamla",
                 onPressed: () {
-                  vm.sendToArduino("Hello, Arduino!");
+                  if (vm.currentRecordStepIndex < arrowRecordSteps.length - 1) {
+                    vm.nextStep();
+                  } else {
+                    //vm.sendRecord();
+                  }
                 },
               ),
               Spacer(),

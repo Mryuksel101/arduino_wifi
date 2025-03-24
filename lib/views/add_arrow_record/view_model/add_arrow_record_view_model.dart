@@ -165,6 +165,13 @@ class AddArrowRecordViewModel extends ChangeNotifier {
     }
   }
 
+  void nextStep() {
+    if (currentRecordStepIndex < arrowRecordSteps.length - 1) {
+      currentRecordStepIndex++;
+      notifyListeners();
+    }
+  }
+
   @override
   void dispose() {
     textController.dispose();
