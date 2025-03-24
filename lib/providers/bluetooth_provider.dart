@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/helpers/ui_helpers.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
 import 'package:arduino_wifi/services/permission_service.dart';
@@ -99,17 +100,11 @@ class BluetoothProvider extends ChangeNotifier {
 
       // Show connection success message
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              backgroundColor: Colors.green,
-              content: Text('Cihaza bağlandı: ${device.name}')),
-        );
+        SnackbarGlobal.show('Cihaza bağlandı: ${device.name}');
       });
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bağlantı başarısız: $e')),
-        );
+        SnackbarGlobal.show('Bağlantı başarısız: $e');
       });
     }
   }

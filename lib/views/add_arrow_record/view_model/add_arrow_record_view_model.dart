@@ -15,21 +15,31 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final BuildContext context;
   BluetoothDevice? connectedDevice;
 
-  void startBleScan() async {}
-
-  void stopBleScan() {}
-
-  Future<void> connectToDevice(BluetoothDevice device) async {
-    try {} catch (e) {
+  void startBleScan() async {
+    try {
+      bluetoothProvider.startBleScan();
+    } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bağlantı başarısız: $e')),
+          SnackBar(content: Text('Tarama başarısız: $e')),
         );
       });
     }
   }
 
-  Future<void> disconnectFromDevice() async {}
+  void stopBleScan() {
+    bluetoothProvider.stopBleScan();
+  }
+
+  Future<void> connectToDevice(BluetoothDevice device) async {
+    await bluetoothProvider.connectToDevice(device);
+    connectedDevice = device;
+  }
+
+  Future<void> disconnectFromDevice() async {
+    await bluetoothProvider.disconnectFromDevice();
+    connectedDevice = null;
+  }
 
   Future<void> sendToArduino(String text) async {
     if (connectedDevice == null) {
@@ -115,7 +125,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
       connectedDevice = bluetoothProvider.connectedDevice;
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        bluetoothProvider.startBleScan();
+        bluetoothProvider.startMonitoringBluetoothState();
       });
     }
     bluetoothProvider.addListener(
