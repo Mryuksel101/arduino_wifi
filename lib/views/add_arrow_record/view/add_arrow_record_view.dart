@@ -1,7 +1,6 @@
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/common/widgets/text_field.dart';
 import 'package:arduino_wifi/views/add_arrow_record/view_model/add_arrow_record_view_model.dart';
-import 'package:arduino_wifi/views/home/home_view_model.dart';
 import 'package:flutter/material.dart';
 
 class AddArrowRecordView extends StatefulWidget {
@@ -28,7 +27,7 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Arduino Wifi'),
+            title: const Text('Yeni Ok Kaydı Ekle'),
           ),
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
