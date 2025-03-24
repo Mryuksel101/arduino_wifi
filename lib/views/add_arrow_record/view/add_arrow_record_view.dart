@@ -1,7 +1,10 @@
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/common/widgets/text_field.dart';
+import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/views/add_arrow_record/view_model/add_arrow_record_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:provider/provider.dart';
 
 class AddArrowRecordView extends StatefulWidget {
   const AddArrowRecordView({super.key});
@@ -16,12 +19,15 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
   @override
   void initState() {
     super.initState();
-    _vm = AddArrowRecordViewModel(context);
+    _vm = AddArrowRecordViewModel(
+        context, Provider.of<BluetoothProvider>(context, listen: false));
     _vm.init();
   }
 
   @override
   Widget build(BuildContext context) {
+    final BluetoothProvider bluetoothProvider =
+        Provider.of<BluetoothProvider>(context, listen: true);
     return ListenableBuilder(
       listenable: _vm,
       builder: (context, child) {
@@ -31,33 +37,35 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
           ),
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _buildBodyForState(),
+            child:
+                _buildBodyForState(bluetoothProvider.state, bluetoothProvider),
           ),
         );
       },
     );
   }
 
-  Widget _buildBodyForState() {
-    switch (_vm.state) {
+  Widget _buildBodyForState(
+      AddArrowRecordViewState state, BluetoothProvider bluetoothProvider) {
+    switch (state) {
       case AddArrowRecordViewState.idle:
         return SizedBox(
-          key: ValueKey(_vm.state),
+          key: ValueKey(state),
         );
       case AddArrowRecordViewState.loading:
-        return _buildLoadingState();
+        return _buildLoadingState(state);
       case AddArrowRecordViewState.scanning:
-        return _buildScanningState();
+        return _buildScanningState(state);
       case AddArrowRecordViewState.scannedDevices:
-        return _buildScannedDevicesState();
+        return _buildScannedDevicesState(state, bluetoothProvider.scanResults);
       case AddArrowRecordViewState.connected:
-        return _buildConnectedState();
+        return _buildConnectedState(state);
     }
   }
 
-  Widget _buildLoadingState() {
+  Widget _buildLoadingState(AddArrowRecordViewState state) {
     return Center(
-      key: ValueKey(_vm.state),
+      key: ValueKey(state),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -75,9 +83,9 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
     );
   }
 
-  Widget _buildScanningState() {
+  Widget _buildScanningState(AddArrowRecordViewState state) {
     return Padding(
-      key: ValueKey(_vm.state),
+      key: ValueKey(state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,9 +132,12 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
     );
   }
 
-  Widget _buildScannedDevicesState() {
+  Widget _buildScannedDevicesState(
+    AddArrowRecordViewState state,
+    List<ScanResult> scanResults,
+  ) {
     return Padding(
-      key: ValueKey(_vm.state),
+      key: ValueKey(state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +194,7 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
 
           // Devices list
           Expanded(
-            child: _vm.scanResults.isEmpty
+            child: scanResults.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -203,9 +214,9 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
                     ),
                   )
                 : ListView.builder(
-                    itemCount: _vm.scanResults.length,
+                    itemCount: scanResults.length,
                     itemBuilder: (context, i) {
-                      final result = _vm.scanResults[i];
+                      final result = scanResults[i];
                       final device = result.device;
                       final name = device.platformName.isNotEmpty
                           ? device.platformName
@@ -323,9 +334,9 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
     );
   }
 
-  Widget _buildConnectedState() {
+  Widget _buildConnectedState(AddArrowRecordViewState state) {
     return Padding(
-      key: ValueKey(_vm.state),
+      key: ValueKey(state),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
