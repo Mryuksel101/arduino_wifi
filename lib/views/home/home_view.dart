@@ -41,9 +41,11 @@ class _HomeViewState extends State<HomeView> {
                         Icons.add,
                         color: Colors.white,
                       ),
+                      SizedBox(width: 10),
                       Text(
                         "Add Arrow Record",
-                        style: TextStyle(color: Colors.white),
+                        style:
+                            TextStyle(color: Colors.white, letterSpacing: 0.5),
                       )
                     ],
                   ),
