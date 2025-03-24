@@ -394,7 +394,9 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(height: 12),
                 SdTextField(
                   label: 'Gönderilecek Veri',
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    _vm.sendToArduino(value);
+                  },
                   textInputType: TextInputType.text,
                   textEditingController: _vm.textController,
                 ),
@@ -402,7 +404,9 @@ class _HomeViewState extends State<HomeView> {
                 SdButton(
                   backgroundColor: Colors.blue,
                   text: 'Gönder',
-                  onPressed: () {},
+                  onPressed: () {
+                    _vm.sendToArduino("Hello, Arduino!");
+                  },
                 ),
               ],
             ),
