@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:arduino_wifi/common/models/arrow.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
 import 'package:arduino_wifi/views/add_arrow_record/models/arrow_record_step.dart';
@@ -15,6 +16,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final BluetoothProvider bluetoothProvider;
   final BuildContext context;
   BluetoothDevice? connectedDevice;
+  Arrow? _saveModel;
 
   void startBleScan() async {
     try {
@@ -144,6 +146,24 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   int currentRecordStepIndex = 0;
   ArrowRecordStep get currentRecordStep =>
       arrowRecordSteps[currentRecordStepIndex];
+
+  void updateSaveModel(
+      {required ArrowMeasurementType type, required dynamic value}) {
+    switch (type) {
+      case ArrowMeasurementType.code:
+        _saveModel!.code = value as String;
+        break;
+      case ArrowMeasurementType.weight:
+        _saveModel!.weight = value as double;
+        break;
+      case ArrowMeasurementType.leftSpine:
+        _saveModel!.leftSpine = value as double;
+        break;
+      case ArrowMeasurementType.rightSpine:
+        _saveModel!.rightSpine = value as double;
+        break;
+    }
+  }
 
   @override
   void dispose() {
