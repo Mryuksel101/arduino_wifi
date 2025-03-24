@@ -1,4 +1,5 @@
 import 'package:arduino_wifi/helpers/snackbar_global.dart';
+import 'package:arduino_wifi/helpers/ui_helpers.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         scaffoldMessengerKey: SnackbarGlobal.key,
+        navigatorKey: UiHelpers.navigator,
         title: 'Flutter Demo',
         theme: ThemeData(
           useMaterial3: true,

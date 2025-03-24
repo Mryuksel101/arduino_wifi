@@ -4,15 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class UiHelpers {
+  static final GlobalKey<NavigatorState> navigator =
+      GlobalKey<NavigatorState>(debugLabel: 'AppNavigator');
+
   static void showBtOffAlert(
       final BuildContext context, final Function openBluetoothSettings) {
+    // Store the original context to use for the Bluetooth settings
+    final BuildContext outerContext = context;
+
     showGeneralDialog(
-      context: context,
+      context: navigator.currentContext!,
       barrierDismissible: false,
       barrierLabel: "Bluetooth Alert",
       transitionDuration: Duration(milliseconds: 400),
       pageBuilder: (_, __, ___) => Container(), // Kullanılmıyor
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
+      transitionBuilder: (dialogContext, animation, secondaryAnimation, child) {
         // Yukarıdan aşağıya kayma animasyonu
         final slideAnimation = Tween<Offset>(
           begin: Offset(0, -0.3),
@@ -66,8 +72,17 @@ class UiHelpers {
                 SdButton(
                   width: double.infinity,
                   backgroundColor: Colors.blue,
-                  onPressed: () async {
-                    await openBluetoothSettings();
+                  onPressed: () {
+                    // Dismiss the dialog using the dialog context
+                    Navigator.of(dialogContext).pop();
+
+                    // Use the original context for Bluetooth settings
+                    // Wrap in Future.delayed to ensure dialog is fully dismissed first
+                    Future.delayed(Duration.zero, () {
+                      if (outerContext.mounted) {
+                        openBluetoothSettings();
+                      }
+                    });
                   },
                   text: "Bluetooth'u Aç",
                 ),
