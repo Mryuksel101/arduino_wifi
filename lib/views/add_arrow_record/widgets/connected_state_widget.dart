@@ -105,7 +105,7 @@ Widget buildConnectedState(
                   if (vm.currentRecordStepIndex < arrowRecordSteps.length - 1) {
                     vm.nextStep();
                   } else {
-                    //vm.sendRecord();
+                    vm.saveArrowRecord();
                   }
                 },
               ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:arduino_wifi/common/models/arrow.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
+import 'package:arduino_wifi/services/arrow_service.dart';
 import 'package:arduino_wifi/services/ble_service.dart';
 import 'package:arduino_wifi/views/add_arrow_record/models/arrow_record_step.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final BuildContext context;
   BluetoothDevice? connectedDevice;
   Arrow? _saveModel;
+  final ArrowService _arrowService = ArrowService();
 
   void startBleScan() async {
     try {
@@ -162,6 +164,22 @@ class AddArrowRecordViewModel extends ChangeNotifier {
       case ArrowMeasurementType.rightSpine:
         _saveModel!.rightSpine = value as double;
         break;
+    }
+  }
+
+  void saveArrowRecord() async {
+    try {
+      await _arrowService.addArrow(_saveModel!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ok kaydedildi'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ok kaydedilemedi: $e')),
+      );
     }
   }
 
