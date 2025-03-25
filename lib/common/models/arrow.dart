@@ -7,7 +7,7 @@ class Arrow {
   double? balancePoint; // Center of gravity as percentage
   double? leftSpine; // First spine measurement
   double? rightSpine; // Second spine measurement
-  Timestamp createdAt; // Firestore timestamp
+  Timestamp? createdAt; // Firestore timestamp
   String? notes;
 
   Arrow({
@@ -17,9 +17,9 @@ class Arrow {
     required this.balancePoint,
     required this.leftSpine,
     required this.rightSpine,
-    Timestamp? createdAt,
+    required this.createdAt,
     this.notes,
-  }) : createdAt = createdAt ?? Timestamp.now();
+  });
 
   // Convert to Map for Firestore
   Map<String, dynamic> toFirestore() {
@@ -29,7 +29,7 @@ class Arrow {
       'balancePoint': balancePoint,
       'leftSpine': leftSpine,
       'rightSpine': rightSpine,
-      'createdAt': createdAt,
+      'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'notes': notes,
     };
   }
@@ -68,6 +68,19 @@ class Arrow {
       rightSpine: rightSpine ?? this.rightSpine,
       createdAt: createdAt,
       notes: notes ?? this.notes,
+    );
+  }
+
+  // arrow emty
+  static Arrow empty() {
+    return Arrow(
+      code: '',
+      weight: 0,
+      balancePoint: 0,
+      leftSpine: 0,
+      rightSpine: 0,
+      createdAt: null,
+      notes: '',
     );
   }
 }

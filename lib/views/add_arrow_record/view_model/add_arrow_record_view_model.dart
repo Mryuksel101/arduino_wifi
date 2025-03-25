@@ -17,7 +17,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final BluetoothProvider bluetoothProvider;
   final BuildContext context;
   BluetoothDevice? connectedDevice;
-  Arrow? _saveModel;
+  final Arrow _saveModel = Arrow.empty();
   final ArrowService _arrowService = ArrowService();
 
   void startBleScan() async {
@@ -153,23 +153,23 @@ class AddArrowRecordViewModel extends ChangeNotifier {
       {required ArrowMeasurementType type, required dynamic value}) {
     switch (type) {
       case ArrowMeasurementType.code:
-        _saveModel!.code = value as String;
+        _saveModel.code = value as String;
         break;
       case ArrowMeasurementType.weight:
-        _saveModel!.weight = value as double;
+        _saveModel.weight = double.parse(value);
         break;
       case ArrowMeasurementType.leftSpine:
-        _saveModel!.leftSpine = value as double;
+        _saveModel.leftSpine = double.parse(value);
         break;
       case ArrowMeasurementType.rightSpine:
-        _saveModel!.rightSpine = value as double;
+        _saveModel.rightSpine = double.parse(value);
         break;
     }
   }
 
   void saveArrowRecord() async {
     try {
-      await _arrowService.addArrow(_saveModel!);
+      await _arrowService.addArrow(_saveModel);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ok kaydedildi'),

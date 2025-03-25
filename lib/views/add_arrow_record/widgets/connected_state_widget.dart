@@ -88,6 +88,7 @@ Widget buildConnectedState(
               SdTextField(
                 label: vm.currentRecordStep.title,
                 onChanged: (value) {
+                  if (value.isEmpty) return;
                   vm.updateSaveModel(
                       type: vm.currentRecordStep.type, value: value);
                 },
