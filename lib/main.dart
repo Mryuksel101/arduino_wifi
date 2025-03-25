@@ -1,14 +1,21 @@
+import 'package:arduino_wifi/firebase_options.dart';
 import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/helpers/ui_helpers.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
