@@ -42,6 +42,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   Future<void> connectToDevice(BluetoothDevice device) async {
     await bluetoothProvider.connectToDevice(device);
     connectedDevice = device;
+    _initListeningToCharacteristic();
   }
 
   Future<void> disconnectFromDevice() async {
@@ -66,6 +67,8 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   }
 
   void _initListeningToCharacteristic() {
+    _characteristicSubscription?.cancel();
+    _characteristicSubscription = null;
     _characteristicSubscription = BLEService().listenToCharacteristic()?.listen(
       (event) {
         log('Received: $event');
