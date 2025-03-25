@@ -17,7 +17,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final BluetoothProvider bluetoothProvider;
   final BuildContext context;
   BluetoothDevice? connectedDevice;
-  final Arrow _saveModel = Arrow.empty();
+  final Arrow saveModel = Arrow.empty();
   final ArrowService _arrowService = ArrowService();
   bool isArrowRecordSaving = false;
 
@@ -154,25 +154,27 @@ class AddArrowRecordViewModel extends ChangeNotifier {
       {required ArrowMeasurementType type, required dynamic value}) {
     switch (type) {
       case ArrowMeasurementType.code:
-        _saveModel.code = value as String;
+        saveModel.code = value as String;
         break;
       case ArrowMeasurementType.weight:
-        _saveModel.weight = double.parse(value);
+        saveModel.weight = double.parse(value);
         break;
       case ArrowMeasurementType.leftSpine:
-        _saveModel.leftSpine = double.parse(value);
+        saveModel.leftSpine = double.parse(value);
         break;
       case ArrowMeasurementType.rightSpine:
-        _saveModel.rightSpine = double.parse(value);
+        saveModel.rightSpine = double.parse(value);
         break;
     }
+    currentRecordStep.value = value;
+    textController.text = value.toString();
   }
 
   void saveArrowRecord() async {
     try {
       isArrowRecordSaving = true;
       notifyListeners();
-      await _arrowService.addArrow(_saveModel);
+      await _arrowService.addArrow(saveModel);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ok kaydedildi'),
@@ -193,6 +195,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   void nextStep() {
     if (currentRecordStepIndex < arrowRecordSteps.length - 1) {
       currentRecordStepIndex++;
+      textController.text = '';
       notifyListeners();
     }
   }
