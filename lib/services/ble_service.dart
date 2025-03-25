@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BLEService {
@@ -17,6 +19,28 @@ class BLEService {
   Stream<List<ScanResult>> get scanResults => FlutterBluePlus.scanResults;
   Stream<BluetoothAdapterState> get adapterState =>
       FlutterBluePlus.adapterState;
+
+  /// Karakteristik değişikliklerini dinleme
+  /// Cihazdan gelen verileri stream olarak döndürür
+  Stream<String>? listenToCharacteristic() {
+    if (_targetCharacteristic == null) {
+      throw Exception("Characteristic not initialized");
+    }
+
+    try {
+      // Notification'ları etkinleştir
+      _targetCharacteristic!.setNotifyValue(true);
+
+      // Stream'i döndür ve String'e çevir
+      return _targetCharacteristic!.onValueReceived.map(
+        (value) => String.fromCharCodes(value),
+      );
+    } catch (e) {
+      print("Error setting up characteristic notifications: $e");
+      return null;
+    }
+  }
+
   // Start BLE scanning
   Future<void> startScanning(
       {Duration timeout = const Duration(seconds: 4)}) async {
