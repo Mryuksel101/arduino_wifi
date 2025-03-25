@@ -61,7 +61,7 @@ class BLEService {
       // Discover services after connection
       await _discoverServices();
     } catch (e) {
-      throw Exception("Connection failed: $e");
+      rethrow;
     }
   }
 

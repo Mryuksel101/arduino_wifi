@@ -51,6 +51,7 @@ class BluetoothProvider extends ChangeNotifier {
         // Taramayı durdur
         _bleService.stopScanning();
         this.state = AddArrowRecordViewState.idle;
+        _bleService.disconnect();
         notifyListeners();
         bluetoothStatus = "Bluetooth kapalı";
         // Use post-frame callback to avoid showing dialog during build
@@ -101,6 +102,7 @@ class BluetoothProvider extends ChangeNotifier {
         SnackbarGlobal.show('Cihaza bağlandı: ${device.name}');
       });
     } catch (e) {
+      rethrow;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         SnackbarGlobal.show('Bağlantı başarısız: $e');
       });

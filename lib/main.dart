@@ -5,12 +5,21 @@ import 'package:arduino_wifi/providers/bluetooth_provider.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // White status bar
+      statusBarIconBrightness: Brightness.dark, // Dark icons for visibility
+      statusBarBrightness: Brightness.light, // For iOS
+    ),
+  );
 
   // Initialize Firebase
   await Firebase.initializeApp(

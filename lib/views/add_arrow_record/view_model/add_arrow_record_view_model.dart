@@ -40,9 +40,13 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   }
 
   Future<void> connectToDevice(BluetoothDevice device) async {
-    await bluetoothProvider.connectToDevice(device);
-    connectedDevice = device;
-    _initListeningToCharacteristic();
+    try {
+      await bluetoothProvider.connectToDevice(device);
+      connectedDevice = device;
+      _initListeningToCharacteristic();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> disconnectFromDevice() async {
