@@ -19,6 +19,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   BluetoothDevice? connectedDevice;
   final Arrow _saveModel = Arrow.empty();
   final ArrowService _arrowService = ArrowService();
+  bool isArrowRecordSaving = false;
 
   void startBleScan() async {
     try {
@@ -169,6 +170,8 @@ class AddArrowRecordViewModel extends ChangeNotifier {
 
   void saveArrowRecord() async {
     try {
+      isArrowRecordSaving = true;
+      notifyListeners();
       await _arrowService.addArrow(_saveModel);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -176,10 +179,14 @@ class AddArrowRecordViewModel extends ChangeNotifier {
           backgroundColor: Colors.green,
         ),
       );
+      isArrowRecordSaving = false;
+      notifyListeners();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ok kaydedilemedi: $e')),
       );
+      isArrowRecordSaving = false;
+      notifyListeners();
     }
   }
 

@@ -6,9 +6,14 @@ class ArrowService {
       FirebaseFirestore.instance.collection('arrows');
 
   // Add a new arrow
-  Future<String> addArrow(Arrow arrow) async {
-    DocumentReference docRef = await arrowsCollection.add(arrow.toFirestore());
-    return docRef.id;
+  Future<String?> addArrow(Arrow arrow) async {
+    try {
+      DocumentReference docRef =
+          await arrowsCollection.add(arrow.toFirestore());
+      return docRef.id;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // Get all arrows
