@@ -8,7 +8,7 @@ class BLEService {
       "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
   BluetoothDevice? _connectedDevice;
-  BluetoothCharacteristic? _targetCharacteristic;
+  static BluetoothCharacteristic? _targetCharacteristic;
 
   // Singleton pattern
   static final BLEService _instance = BLEService._internal();

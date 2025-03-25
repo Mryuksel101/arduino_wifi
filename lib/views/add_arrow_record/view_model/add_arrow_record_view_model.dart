@@ -21,6 +21,8 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   final ArrowService _arrowService = ArrowService();
   bool isArrowRecordSaving = false;
 
+  StreamSubscription<String>? _characteristicSubscription;
+
   void startBleScan() async {
     try {
       bluetoothProvider.startBleScan();
@@ -50,6 +52,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   Future<void> init() async {
     if (bluetoothProvider.state == AddArrowRecordViewState.connected) {
       connectedDevice = bluetoothProvider.connectedDevice;
+      _initListeningToCharacteristic();
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         bluetoothProvider.startMonitoringBluetoothState();
@@ -58,6 +61,18 @@ class AddArrowRecordViewModel extends ChangeNotifier {
     bluetoothProvider.addListener(
       () {
         log(bluetoothProvider.state.name);
+      },
+    );
+  }
+
+  void _initListeningToCharacteristic() {
+    _characteristicSubscription = BLEService().listenToCharacteristic()?.listen(
+      (event) {
+        log('Received: $event');
+        updateSaveModel(
+          type: currentRecordStep.type,
+          value: event,
+        );
       },
     );
   }
@@ -125,45 +140,9 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   void sendToArduinoCurrentStepMeasurementType(
       ArrowMeasurementType type) async {
     try {
-      // Get the services
-      List<BluetoothService> services =
-          await connectedDevice!.discoverServices();
-
-      // Find the service
-      BluetoothService? targetService;
-      for (var service in services) {
-        if (service.uuid.str == BLEService.serviceUUID) {
-          targetService = service;
-          break;
-        }
-      }
-
-      if (targetService == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Arduino servisi bulunamadı')),
-        );
-        return;
-      }
-
-      // Find the characteristic
-      BluetoothCharacteristic? targetCharacteristic;
-      for (var characteristic in targetService.characteristics) {
-        if (characteristic.uuid.str == BLEService.characteristicUUID) {
-          targetCharacteristic = characteristic;
-          break;
-        }
-      }
-
-      if (targetCharacteristic == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Arduino özelliği bulunamadı')),
-        );
-        return;
-      }
-
       // Convert the text to bytes and write to the characteristic
       List<int> bytes = type.name.codeUnits;
-      await targetCharacteristic.write(bytes);
+      await BLEService().writeCharacteristic(bytes);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -183,6 +162,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _characteristicSubscription?.cancel();
     textController.dispose();
     super.dispose();
   }

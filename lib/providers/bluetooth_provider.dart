@@ -93,8 +93,7 @@ class BluetoothProvider extends ChangeNotifier {
 
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
-      await device.connect();
-      connectedDevice = device;
+      await _bleService.connectToDevice(device);
       state = AddArrowRecordViewState.connected;
       notifyListeners();
 

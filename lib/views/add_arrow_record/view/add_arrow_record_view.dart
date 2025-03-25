@@ -26,6 +26,12 @@ class _AddArrowRecordViewState extends State<AddArrowRecordView> {
   }
 
   @override
+  void dispose() {
+    _vm.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final BluetoothProvider bluetoothProvider =
         Provider.of<BluetoothProvider>(context, listen: true);
