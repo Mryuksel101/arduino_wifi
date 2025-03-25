@@ -29,7 +29,6 @@ class BluetoothProvider extends ChangeNotifier {
   final BLEService _bleService = BLEService();
   final PermissionService _permissionService = PermissionService();
   String bluetoothStatus = "Kontrol ediliyor...";
-  BluetoothDevice? connectedDevice;
 
   void startMonitoringBluetoothState() {
     _bluetoothStateSubscription?.cancel(); // Varsa önceki aboneliği iptal et
@@ -109,12 +108,9 @@ class BluetoothProvider extends ChangeNotifier {
   }
 
   Future<void> disconnectFromDevice() async {
-    if (connectedDevice != null) {
-      await connectedDevice!.disconnect();
-      connectedDevice = null;
-      state = AddArrowRecordViewState.scannedDevices;
-      notifyListeners();
-    }
+    await _bleService.disconnect();
+    state = AddArrowRecordViewState.scannedDevices;
+    notifyListeners();
   }
 
   void startBleScan() async {
