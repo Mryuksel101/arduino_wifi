@@ -1,61 +1,73 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Arrow {
-  String code; // Unique identifier for the arrow
-  double weight; // Weight in grams
-  double balancePoint; // Center of gravity as percentage
-  double leftSpine; // First spine measurement
-  double rightSpine; // Second spine measurement
-  // Optional fields
-  DateTime createdAt;
+  String? id; // Firestore document ID
+  String? code; // Unique identifier for the arrow
+  double? weight; // Weight in grams
+  double? balancePoint; // Center of gravity as percentage
+  double? leftSpine; // First spine measurement
+  double? rightSpine; // Second spine measurement
+  Timestamp createdAt; // Firestore timestamp
+  String? notes;
 
   Arrow({
+    this.id,
     required this.code,
     required this.weight,
     required this.balancePoint,
     required this.leftSpine,
     required this.rightSpine,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+    Timestamp? createdAt,
+    this.notes,
+  }) : createdAt = createdAt ?? Timestamp.now();
 
-  // Convert to JSON for storage
-  Map<String, dynamic> toJson() {
+  // Convert to Map for Firestore
+  Map<String, dynamic> toFirestore() {
     return {
       'code': code,
       'weight': weight,
       'balancePoint': balancePoint,
       'leftSpine': leftSpine,
       'rightSpine': rightSpine,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt,
+      'notes': notes,
     };
   }
 
-  // Create from JSON
-  factory Arrow.fromJson(Map<String, dynamic> json) {
+  // Create from Firestore document
+  factory Arrow.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Arrow(
-      code: json['code'],
-      weight: json['weight'],
-      balancePoint: json['balancePoint'],
-      leftSpine: json['leftSpine'],
-      rightSpine: json['rightSpine'],
-      createdAt: DateTime.parse(json['createdAt']),
+      id: doc.id, // Save the Firestore document ID
+      code: data['code'] ?? '',
+      weight: (data['weight'] ?? 0).toDouble(),
+      balancePoint: (data['balancePoint'] ?? 0).toDouble(),
+      leftSpine: (data['leftSpine'] ?? 0).toDouble(),
+      rightSpine: (data['rightSpine'] ?? 0).toDouble(),
+      createdAt: data['createdAt'] as Timestamp,
+      notes: data['notes'],
     );
   }
 
   // Copy with new values
   Arrow copyWith({
+    String? id,
     String? code,
     double? weight,
     double? balancePoint,
-    double? spine1,
-    double? spine2,
+    double? leftSpine,
+    double? rightSpine,
     String? notes,
   }) {
     return Arrow(
+      id: id ?? this.id,
       code: code ?? this.code,
       weight: weight ?? this.weight,
       balancePoint: balancePoint ?? this.balancePoint,
-      leftSpine: spine1 ?? leftSpine,
-      rightSpine: spine2 ?? rightSpine,
+      leftSpine: leftSpine ?? this.leftSpine,
+      rightSpine: rightSpine ?? this.rightSpine,
       createdAt: createdAt,
+      notes: notes ?? this.notes,
     );
   }
 }
