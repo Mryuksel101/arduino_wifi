@@ -7,7 +7,7 @@ class BLEService {
   static const String characteristicUUID =
       "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
-  BluetoothDevice? _connectedDevice;
+  BluetoothDevice? connectedDevice;
   static BluetoothCharacteristic? _targetCharacteristic;
 
   // Singleton pattern
@@ -56,7 +56,7 @@ class BLEService {
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
       await device.connect(autoConnect: false);
-      _connectedDevice = device;
+      connectedDevice = device;
 
       // Discover services after connection
       await _discoverServices();
@@ -67,10 +67,9 @@ class BLEService {
 
   // Discover services and characteristics
   Future<void> _discoverServices() async {
-    if (_connectedDevice == null) return;
+    if (connectedDevice == null) return;
 
-    List<BluetoothService> services =
-        await _connectedDevice!.discoverServices();
+    List<BluetoothService> services = await connectedDevice!.discoverServices();
     for (BluetoothService service in services) {
       if (service.uuid == Guid(serviceUUID)) {
         for (BluetoothCharacteristic characteristic
@@ -106,9 +105,9 @@ class BLEService {
 
   // Disconnect from device
   Future<void> disconnect() async {
-    if (_connectedDevice != null) {
-      await _connectedDevice!.disconnect();
-      _connectedDevice = null;
+    if (connectedDevice != null) {
+      await connectedDevice!.disconnect();
+      connectedDevice = null;
       _targetCharacteristic = null;
     }
   }

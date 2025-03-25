@@ -53,6 +53,7 @@ class AddArrowRecordViewModel extends ChangeNotifier {
   Future<void> init() async {
     if (bluetoothProvider.state == AddArrowRecordViewState.connected) {
       _initListeningToCharacteristic();
+      connectedDevice = BLEService().connectedDevice;
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         bluetoothProvider.startMonitoringBluetoothState();
