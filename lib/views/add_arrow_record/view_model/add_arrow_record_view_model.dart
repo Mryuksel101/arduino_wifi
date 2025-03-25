@@ -47,85 +47,6 @@ class AddArrowRecordViewModel extends ChangeNotifier {
     connectedDevice = null;
   }
 
-  Future<void> sendToArduino(String text) async {
-    if (connectedDevice == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cihaz bağlı değil')),
-      );
-      return;
-    }
-
-    if (text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lütfen bir mesaj girin')),
-      );
-      return;
-    }
-
-    if (text.length > 20) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mesaj 20 karakterden uzun olamaz')),
-      );
-      return;
-    }
-
-    try {
-      // Get the services
-      List<BluetoothService> services =
-          await connectedDevice!.discoverServices();
-
-      // Find the service
-      BluetoothService? targetService;
-      for (var service in services) {
-        if (service.uuid.str == BLEService.serviceUUID) {
-          targetService = service;
-          break;
-        }
-      }
-
-      if (targetService == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Arduino servisi bulunamadı')),
-        );
-        return;
-      }
-
-      // Find the characteristic
-      BluetoothCharacteristic? targetCharacteristic;
-      for (var characteristic in targetService.characteristics) {
-        if (characteristic.uuid.str == BLEService.characteristicUUID) {
-          targetCharacteristic = characteristic;
-          break;
-        }
-      }
-
-      if (targetCharacteristic == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Arduino özelliği bulunamadı')),
-        );
-        return;
-      }
-
-      // Convert the text to bytes and write to the characteristic
-      List<int> bytes = text.codeUnits;
-      await targetCharacteristic.write(bytes);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Mesaj gönderildi: $text'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Clear text field after sending
-      textController.clear();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mesaj gönderilemedi: $e')),
-      );
-    }
-  }
-
   Future<void> init() async {
     if (bluetoothProvider.state == AddArrowRecordViewState.connected) {
       connectedDevice = bluetoothProvider.connectedDevice;
@@ -196,7 +117,67 @@ class AddArrowRecordViewModel extends ChangeNotifier {
     if (currentRecordStepIndex < arrowRecordSteps.length - 1) {
       currentRecordStepIndex++;
       textController.text = '';
+      sendToArduinoCurrentStepMeasurementType(currentRecordStep.type);
       notifyListeners();
+    }
+  }
+
+  void sendToArduinoCurrentStepMeasurementType(
+      ArrowMeasurementType type) async {
+    try {
+      // Get the services
+      List<BluetoothService> services =
+          await connectedDevice!.discoverServices();
+
+      // Find the service
+      BluetoothService? targetService;
+      for (var service in services) {
+        if (service.uuid.str == BLEService.serviceUUID) {
+          targetService = service;
+          break;
+        }
+      }
+
+      if (targetService == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Arduino servisi bulunamadı')),
+        );
+        return;
+      }
+
+      // Find the characteristic
+      BluetoothCharacteristic? targetCharacteristic;
+      for (var characteristic in targetService.characteristics) {
+        if (characteristic.uuid.str == BLEService.characteristicUUID) {
+          targetCharacteristic = characteristic;
+          break;
+        }
+      }
+
+      if (targetCharacteristic == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Arduino özelliği bulunamadı')),
+        );
+        return;
+      }
+
+      // Convert the text to bytes and write to the characteristic
+      List<int> bytes = type.name.codeUnits;
+      await targetCharacteristic.write(bytes);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ölçüme başlandı: ${currentRecordStep.title}'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Clear text field after sending
+      textController.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Mesaj gönderilemedi: $e')),
+      );
     }
   }
 
