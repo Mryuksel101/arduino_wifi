@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BLEService {
@@ -36,7 +37,7 @@ class BLEService {
         (value) => String.fromCharCodes(value),
       );
     } catch (e) {
-      print("Error setting up characteristic notifications: $e");
+      debugPrint("Error setting up characteristic notifications: $e");
       return null;
     }
   }

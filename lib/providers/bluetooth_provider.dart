@@ -99,7 +99,7 @@ class BluetoothProvider extends ChangeNotifier {
 
       // Show connection success message
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        SnackbarGlobal.show('Cihaza bağlandı: ${device.name}');
+        SnackbarGlobal.show('Cihaza bağlandı: ${device.platformName}');
       });
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
