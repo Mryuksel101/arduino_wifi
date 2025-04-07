@@ -1,16 +1,15 @@
+import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/auth_provider.dart';
-
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpViewState extends State<SignUpView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();

@@ -3,7 +3,7 @@ import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/helpers/ui_helpers.dart';
 import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
-import 'package:arduino_wifi/screens/auth/sign_in_screen.dart';
+import 'package:arduino_wifi/views/auth/signin/view/signin_view.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
             if (authProvider.isAuthenticated) {
               return const BottomNavView(); // Replace with your home screen
             }
-            return const SignInScreen();
+            return const SignInView();
           },
         ),
       ),
