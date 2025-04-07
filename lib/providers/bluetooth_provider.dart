@@ -102,10 +102,10 @@ class BluetoothProvider extends ChangeNotifier {
         SnackbarGlobal.show('Cihaza bağlandı: ${device.name}');
       });
     } catch (e) {
-      rethrow;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         SnackbarGlobal.show('Bağlantı başarısız: $e');
       });
+      rethrow;
     }
   }
 
