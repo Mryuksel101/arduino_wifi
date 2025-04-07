@@ -1,7 +1,9 @@
 import 'package:arduino_wifi/firebase_options.dart';
 import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/helpers/ui_helpers.dart';
+import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:arduino_wifi/providers/bluetooth_provider.dart';
+import 'package:arduino_wifi/screens/auth/sign_in_screen.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,12 +44,13 @@ class MyApp extends StatelessWidget {
             context,
           ),
         ),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         // İhtiyaç duyarsanız daha fazla provider ekleyebilirsiniz
       ],
       child: MaterialApp(
         scaffoldMessengerKey: SnackbarGlobal.key,
         navigatorKey: UiHelpers.navigator,
-        title: 'Flutter Demo',
+        title: 'Arduino WiFi',
         theme: ThemeData(
           useMaterial3: true,
           primarySwatch: Colors.blue,
@@ -56,7 +59,15 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: const BottomNavView(),
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            // Check if user is authenticated
+            if (authProvider.isAuthenticated) {
+              return const BottomNavView(); // Replace with your home screen
+            }
+            return const SignInScreen();
+          },
+        ),
       ),
     );
   }
