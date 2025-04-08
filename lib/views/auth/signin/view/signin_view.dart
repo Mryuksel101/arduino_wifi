@@ -1,3 +1,5 @@
+import 'package:arduino_wifi/common/widgets/sd_button.dart';
+import 'package:arduino_wifi/common/widgets/text_field.dart';
 import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:arduino_wifi/views/auth/signup/view/signup_view_model.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,7 @@ class _SignInViewState extends State<SignInView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
+  final bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -55,14 +57,10 @@ class _SignInViewState extends State<SignInView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
+                  SdTextField(
+                    textEditingController: _emailController,
+                    label: 'Email',
+                    textInputType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -75,26 +73,10 @@ class _SignInViewState extends State<SignInView> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                    obscureText: !_isPasswordVisible,
+                  SdTextField(
+                    textEditingController: _passwordController,
+                    label: "Password",
+                    textInputType: TextInputType.visiblePassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -122,18 +104,18 @@ class _SignInViewState extends State<SignInView> {
                           );
                         }
                       },
-                      child: const Text('Forgot Password?'),
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: Colors.blue),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
+                  SdButton(
+                    text: 'Sign In',
                     onPressed: authProvider.isLoading ? null : _signIn,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: authProvider.isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Sign In'),
+                    loading: authProvider.isLoading,
+                    backgroundColor: Colors.blue,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -149,7 +131,10 @@ class _SignInViewState extends State<SignInView> {
                             ),
                           );
                         },
-                        child: const Text('Sign Up'),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                     ],
                   ),

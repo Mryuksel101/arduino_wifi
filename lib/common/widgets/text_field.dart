@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class SdTextField extends StatelessWidget {
   final String label;
   final String? value;
-  final void Function(String) onChanged;
+  final void Function(String)? onChanged;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
   final bool readOnly;
@@ -15,6 +15,7 @@ class SdTextField extends StatelessWidget {
   final Color? borderColor;
   final double? borderRadius;
   final TextStyle? labelStyle;
+  final Function(String?)? validator;
 
   const SdTextField({
     super.key,
@@ -23,7 +24,7 @@ class SdTextField extends StatelessWidget {
     this.numberOfLines,
     this.enabled = true,
     this.isRequired = false,
-    required this.onChanged,
+    this.onChanged,
     required this.textInputType,
     this.textEditingController,
     this.formatters = const <TextInputFormatter>[],
@@ -31,6 +32,7 @@ class SdTextField extends StatelessWidget {
     this.borderColor,
     this.borderRadius,
     this.labelStyle,
+    this.validator,
   });
 
   @override
@@ -76,6 +78,12 @@ class SdTextField extends StatelessWidget {
               )
             : Text(label),
       ),
+      validator: validator != null
+          ? (value) {
+              validator!(value);
+              return null;
+            }
+          : null,
     );
   }
 }
