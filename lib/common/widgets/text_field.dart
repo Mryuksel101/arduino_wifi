@@ -15,7 +15,7 @@ class SdTextField extends StatelessWidget {
   final Color? borderColor;
   final double? borderRadius;
   final TextStyle? labelStyle;
-  final Function(String?)? validator;
+  final String? Function(String?)? validator;
 
   const SdTextField({
     super.key,
@@ -66,6 +66,14 @@ class SdTextField extends StatelessWidget {
           borderSide: const BorderSide(color: Colors.blue, width: 2.0),
           borderRadius: BorderRadius.circular(borderRadius ?? 25),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+          borderRadius: BorderRadius.circular(borderRadius ?? 25),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+          borderRadius: BorderRadius.circular(borderRadius ?? 25),
+        ),
         label: isRequired
             ? Row(
                 children: [
@@ -80,8 +88,7 @@ class SdTextField extends StatelessWidget {
       ),
       validator: validator != null
           ? (value) {
-              validator!(value);
-              return null;
+              return validator!(value);
             }
           : null,
     );

@@ -52,6 +52,7 @@ class _SignInViewState extends State<SignInView> {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
