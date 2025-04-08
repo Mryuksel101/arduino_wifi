@@ -88,6 +88,8 @@ class _SignInViewState extends State<SignInView> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
+                      style: TextButton.styleFrom(
+                          overlayColor: Colors.blue.withValues(alpha: 0.1)),
                       onPressed: () {
                         // Implement forgot password functionality
                         if (_emailController.text.isNotEmpty) {
@@ -123,6 +125,8 @@ class _SignInViewState extends State<SignInView> {
                     children: [
                       const Text('Don\'t have an account?'),
                       TextButton(
+                        style: TextButton.styleFrom(
+                            overlayColor: Colors.blue.withValues(alpha: 0.1)),
                         onPressed: () {
                           Navigator.push(
                             context,
