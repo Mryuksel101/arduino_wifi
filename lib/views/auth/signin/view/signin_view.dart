@@ -1,5 +1,6 @@
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/common/widgets/text_field.dart';
+import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:arduino_wifi/views/auth/signup/view/signup_view_model.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,9 @@ class _SignInViewState extends State<SignInView> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-
       if (!success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(authProvider.error ?? 'An error occurred')),
+        SnackbarGlobal.showAlert(
+          authProvider.error ?? 'An error occurred',
         );
       }
     }

@@ -1,5 +1,6 @@
 import 'package:arduino_wifi/common/widgets/sd_button.dart';
 import 'package:arduino_wifi/common/widgets/text_field.dart';
+import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +37,8 @@ class _SignUpViewState extends State<SignUpView> {
       if (success && mounted) {
         Navigator.pop(context); // Return to sign in or navigate to home
       } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(authProvider.error ?? 'An error occurred')),
+        SnackbarGlobal.showAlert(
+          authProvider.error ?? 'An error occurred',
         );
       }
     }
