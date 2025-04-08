@@ -16,34 +16,50 @@ class _AboutViewState extends State<AboutView> {
     super.initState();
     viewModel = AboutViewModel();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.setContext(context);
+      if (mounted) {
+        viewModel.setContext(context);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hakkında'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Center(
-            child: Text('About View'),
-          ),
-          const SizedBox(height: 40),
-          ElevatedButton.icon(
-            onPressed: () => viewModel.logout(),
-            icon: const Icon(Icons.logout),
-            label: const Text('Çıkış Yap'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Hakkında'),
+        ),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 30),
+          child: FloatingActionButton.extended(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(60)),
+            backgroundColor: Colors.grey,
+            onPressed: viewModel.logout,
+            label: Row(
+              children: [
+                Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Çıkış Yap",
+                  style: TextStyle(color: Colors.white, letterSpacing: 0.5),
+                )
+              ],
             ),
           ),
-        ],
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Center(
+              child: Text('About View'),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
