@@ -1,3 +1,5 @@
+import 'package:arduino_wifi/common/widgets/sd_button.dart';
+import 'package:arduino_wifi/common/widgets/text_field.dart';
 import 'package:arduino_wifi/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +16,6 @@ class _SignUpViewState extends State<SignUpView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
@@ -54,6 +54,7 @@ class _SignUpViewState extends State<SignUpView> {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _formKey,
               child: SingleChildScrollView(
                 child: Column(
@@ -61,14 +62,10 @@ class _SignUpViewState extends State<SignUpView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 24),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.email),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
+                    SdTextField(
+                      label: "Email",
+                      textEditingController: _emailController,
+                      textInputType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
@@ -81,26 +78,10 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                      obscureText: !_isPasswordVisible,
+                    SdTextField(
+                      textInputType: TextInputType.visiblePassword,
+                      textEditingController: _passwordController,
+                      label: 'Password',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a password';
@@ -112,27 +93,10 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _confirmPasswordController,
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isConfirmPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isConfirmPasswordVisible =
-                                  !_isConfirmPasswordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                      obscureText: !_isConfirmPasswordVisible,
+                    SdTextField(
+                      textEditingController: _confirmPasswordController,
+                      label: 'Confirm Password',
+                      textInputType: TextInputType.visiblePassword,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
@@ -144,14 +108,11 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                     ),
                     const SizedBox(height: 32),
-                    ElevatedButton(
+                    SdButton(
+                      backgroundColor: Colors.blue,
+                      text: 'Sign Up',
                       onPressed: authProvider.isLoading ? null : _signUp,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      child: authProvider.isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Sign Up'),
+                      loading: authProvider.isLoading,
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -159,10 +120,17 @@ class _SignUpViewState extends State<SignUpView> {
                       children: [
                         const Text('Already have an account?'),
                         TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.blue,
+                            overlayColor: Colors.blue.withValues(alpha: 0.1),
+                          ),
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text('Sign In'),
+                          child: const Text(
+                            'Sign In',
+                            style: TextStyle(color: Colors.blue),
+                          ),
                         ),
                       ],
                     ),
