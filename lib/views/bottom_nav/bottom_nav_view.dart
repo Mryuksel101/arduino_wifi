@@ -1,5 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:arduino_wifi/views/about/about_view.dart';
+import 'package:arduino_wifi/views/about/view/about_view.dart';
 import 'package:arduino_wifi/views/bottom_nav/bottom_nav_view_model.dart';
 import 'package:arduino_wifi/views/home/home_view.dart';
 import 'package:arduino_wifi/views/settings/settings_view.dart';
