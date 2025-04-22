@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:arduino_wifi/helpers/snackbar_global.dart';
 import 'package:arduino_wifi/services/geometry_service.dart';
 import 'package:flutter/material.dart';
 
 class SettingsViewModel extends ChangeNotifier {
   final GeometryService geometryService = GeometryService();
+  Offset? tapPosition;
+  String tapInfoText = "No tap detected";
 
   // Computer polygon coordinates
   final List<List<double>> computerPolygon = [
@@ -67,9 +71,19 @@ class SettingsViewModel extends ChangeNotifier {
     [310, 262]
   ];
 
-  void handleTapEvent(TapDownDetails details, BuildContext context) {
-    final RenderBox box = context.findRenderObject() as RenderBox;
+  void handleTapEvent(TapDownDetails details, GlobalKey imageKey) {
+    // Get the RenderBox of the image widget specifically
+    final RenderBox box =
+        imageKey.currentContext?.findRenderObject() as RenderBox;
+
+    // Calculate position relative to the image
     final Offset localPosition = box.globalToLocal(details.globalPosition);
+
+    // Update tap position for display
+    tapPosition = localPosition;
+
+    log("Tap event detected at: ${details.globalPosition}");
+    log("Local position relative to image: $localPosition");
 
     final List<Offset> computerPoly =
         computerPolygon.map((point) => Offset(point[0], point[1])).toList();
@@ -87,6 +101,8 @@ class SettingsViewModel extends ChangeNotifier {
       // Handle computer tap event
       print("Computer tapped at: $localPosition");
       SnackbarGlobal.show("Computer tapped at: $localPosition");
+      tapInfoText = "Computer tapped at: $localPosition";
+      notifyListeners();
       return;
     }
     final bool isInPhone =
@@ -96,6 +112,8 @@ class SettingsViewModel extends ChangeNotifier {
       // Handle phone tap event
       print("Phone tapped at: $localPosition");
       SnackbarGlobal.show("Phone tapped at: $localPosition");
+      tapInfoText = "Phone tapped at: $localPosition";
+      notifyListeners();
       return;
     }
 
@@ -106,6 +124,8 @@ class SettingsViewModel extends ChangeNotifier {
       // Handle coffee tap event
       print("Coffee tapped at: $localPosition");
       SnackbarGlobal.show("Coffee tapped at: $localPosition");
+      tapInfoText = "Coffee tapped at: $localPosition";
+      notifyListeners();
       return;
     }
   }
