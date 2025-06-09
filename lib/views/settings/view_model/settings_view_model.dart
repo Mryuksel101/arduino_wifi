@@ -8,9 +8,43 @@ class SettingsViewModel extends ChangeNotifier {
   final GeometryService geometryService = GeometryService();
   Offset? tapPosition;
   String tapInfoText = "No tap detected";
+  final double originalImageWidth = 400;
+  final double originalImageHeight = 379;
+
+  Map<String, List<Offset>> get normalizedpolygons => {
+        "computer": _computerPolygon
+            .map((point) => Offset(
+                point[0] / originalImageWidth, point[1] / originalImageHeight))
+            .toList(),
+        "phone": _phonePolygon
+            .map((point) => Offset(
+                point[0] / originalImageWidth, point[1] / originalImageHeight))
+            .toList(),
+        "coffee": _coffeePolygon
+            .map((point) => Offset(
+                point[0] / originalImageWidth, point[1] / originalImageHeight))
+            .toList(),
+      };
+
+  List<Offset> scaledPoints(
+    List<List<double>> points,
+    Size actualSize,
+  ) {
+    return points
+        .map((point) =>
+            Offset(point[0] * actualSize.width, point[1] * actualSize.height))
+        .toList();
+  }
+
+  Size _imageActualSize(GlobalKey imageKey) {
+    final RenderBox box =
+        imageKey.currentContext?.findRenderObject() as RenderBox;
+    // Assuming the image is displayed at its original size
+    return Size(box.size.width, box.size.height);
+  }
 
   // Computer polygon coordinates
-  final List<List<double>> computerPolygon = [
+  final List<List<double>> _computerPolygon = [
     [32, 42],
     [268, 41],
     [274, 46],
@@ -28,7 +62,7 @@ class SettingsViewModel extends ChangeNotifier {
   ];
 
   // Phone polygon coordinates
-  final List<List<double>> phonePolygon = [
+  final List<List<double>> _phonePolygon = [
     [290, 172],
     [324, 172],
     [328, 176],
@@ -39,7 +73,7 @@ class SettingsViewModel extends ChangeNotifier {
   ];
 
   // Coffee polygon coordinates
-  final List<List<double>> coffeePolygon = [
+  final List<List<double>> _coffeePolygon = [
     [329, 257],
     [344, 258],
     [350, 259],
@@ -85,48 +119,18 @@ class SettingsViewModel extends ChangeNotifier {
     log("Tap event detected at: ${details.globalPosition}");
     log("Local position relative to image: $localPosition");
 
-    final List<Offset> computerPoly =
-        computerPolygon.map((point) => Offset(point[0], point[1])).toList();
-
-    final List<Offset> coffeePoly =
-        coffeePolygon.map((point) => Offset(point[0], point[1])).toList();
-
-    final List<Offset> phonePoly =
-        phonePolygon.map((point) => Offset(point[0], point[1])).toList();
-
-    final bool isInComputer =
-        GeometryService.isPointInPolygon(localPosition, computerPoly);
-
-    if (isInComputer) {
-      // Handle computer tap event
-      print("Computer tapped at: $localPosition");
-      SnackbarGlobal.show("Computer tapped at: $localPosition");
-      tapInfoText = "Computer tapped at: $localPosition";
-      notifyListeners();
-      return;
-    }
-    final bool isInPhone =
-        GeometryService.isPointInPolygon(localPosition, phonePoly);
-
-    if (isInPhone) {
-      // Handle phone tap event
-      print("Phone tapped at: $localPosition");
-      SnackbarGlobal.show("Phone tapped at: $localPosition");
-      tapInfoText = "Phone tapped at: $localPosition";
-      notifyListeners();
-      return;
-    }
-
-    final bool isInCoffee =
-        GeometryService.isPointInPolygon(localPosition, coffeePoly);
-
-    if (isInCoffee) {
-      // Handle coffee tap event
-      print("Coffee tapped at: $localPosition");
-      SnackbarGlobal.show("Coffee tapped at: $localPosition");
-      tapInfoText = "Coffee tapped at: $localPosition";
-      notifyListeners();
-      return;
+    for (final MapEntry<String, List<Offset>> polygon
+        in normalizedpolygons.entries) {
+      final List<Offset> scaledPoints = this.scaledPoints(
+        polygon.value.map((point) => [point.dx, point.dy]).toList(),
+        _imageActualSize(imageKey),
+      );
+      if (geometryService.isPointInPolygon(localPosition, scaledPoints)) {
+        SnackbarGlobal.show("${polygon.key} tapped at: $localPosition");
+        tapInfoText = "${polygon.key} tapped at: $localPosition";
+        notifyListeners();
+        return;
+      }
     }
   }
 }

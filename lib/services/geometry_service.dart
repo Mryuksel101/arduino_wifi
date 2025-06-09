@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class GeometryService {
   /// Checks if a point is inside a polygon using the ray casting algorithm
-  static bool isPointInPolygon(Offset point, List<Offset> polygon) {
+  bool isPointInPolygon(Offset point, List<Offset> polygon) {
     int intersectCount = 0;
     for (int j = 0; j < polygon.length; j++) {
       int i = (j + 1) % polygon.length;

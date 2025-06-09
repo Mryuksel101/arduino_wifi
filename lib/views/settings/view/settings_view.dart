@@ -30,6 +30,9 @@ class _SettingsViewState extends State<SettingsView> {
                 _viewModel.handleTapEvent(details, _imageKey);
               },
               child: Image(
+                height: 400,
+                width: double.infinity,
+                fit: BoxFit.cover,
                 key: _imageKey,
                 image: const AssetImage('assets/images/workplace.jpg'),
               ),
